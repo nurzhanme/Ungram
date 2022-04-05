@@ -1,8 +1,8 @@
-using Ungram.Services;
+using InstagramUnfollowers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<InstaService>();
+builder.Services.AddScoped<Client>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

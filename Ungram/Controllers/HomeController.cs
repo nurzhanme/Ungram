@@ -1,18 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using InstagramUnfollowers;
 using Ungram.Models;
-using Ungram.Services;
 
 namespace Ungram.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly InstaService _instaService;
-        public HomeController(ILogger<HomeController> logger, InstaService instaService)
+        private readonly Client _client;
+        public HomeController(ILogger<HomeController> logger, Client client)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _instaService = instaService ?? throw new ArgumentNullException(nameof(instaService));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         public IActionResult Index()
@@ -26,14 +26,14 @@ namespace Ungram.Controllers
         {
             if (ModelState.IsValid)
             {
-                var authResult = await _instaService.Login(vm.Username, vm.Password);
+                var authResult = await _client.Login(vm.Username, vm.Password);
 
-                if (authResult.Item1)
+                if (!string.IsNullOrWhiteSpace(authResult))
                 {
                     ViewData["login"] = true;
                 }
 
-                var result = await _instaService.GetNotFollowingBack(vm.Username);
+                var result = await _client.GetNotFollowingBack(vm.Username);
                 ViewData["NotFollowingBack"] = result;
                 return View();
             }
